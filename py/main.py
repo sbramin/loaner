@@ -20,7 +20,7 @@ class GradeRank(object):
 
 class Person(object):
     def __init__(self, name, types, grade_rank):
-        self.name = name
+        self.name = name.title()
         self.types = types
         self.grade_rank = grade_rank
 
@@ -67,7 +67,7 @@ def main():
     people.append(Person('John', [TypeRatio('cars', 50), TypeRatio('beer', 50)], GradeRank(3,'>')))
     people.append(Person('frank', [TypeRatio('cars'), TypeRatio('bikes')], GradeRank(4,'>=')))
     people.append(Person('bob', [TypeRatio('bikes')], GradeRank()))
-    people.append(Person('boby', [TypeRatio('cars')], GradeRank()))
+    people.append(Person('Boby', [TypeRatio('cars')], GradeRank()))
 
     for person in people:
         if payin.type not in person.my_types():
@@ -76,6 +76,10 @@ def main():
             if grader(payin.grade, person.grade_rank):
                 eligble_people.append(person)
 
-    print("{} is going to buy some {}".format(choice(eligble_people).name, payin.type))
+    if eligble_people:
+        print("{} is going to buy some {}".format(choice(eligble_people).name, payin.type))
+    else:
+        print("no one fits the bill")
+
 if __name__ == '__main__':
     main()
