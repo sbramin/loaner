@@ -13,7 +13,7 @@ class TypeRatio(object):
 
 
 class GradeRank(object):
-    def __init__(self, grade, oper):
+    def __init__(self, grade=0, oper='>='):
         self.grade = grade
         self.oper = oper
 
@@ -50,35 +50,32 @@ class Payment(object):
         print(self.grade)
 
 
-def compare_grades():
+def grader(payment_grade, person_grade_rank):
     operators= {
-        '>': lambda: x, y: True if x > y else False,
-        '<': lambda: x, y: True if x < y else False,
-        '>=': lambda: x, y: True if x >= y else False,
-        '<=': lambda: x, y: True if x <= y else False
+        '>': lambda x, y: True if x > y else False,
+        '>=': lambda x, y: True if x >= y else False
     }
-    return operators
+    return operators[person_grade_rank.oper](payment_grade, person_grade_rank.grade)
 
 
 def main():
-    grader = compare_grades()
-    print()
-
     people = []
     eligble_people = []
 
-    payin = Payment(1000, 'cars', 2)
+    payin = Payment(1000, 'cars', 4)
 
     people.append(Person('John', [TypeRatio('cars', 50), TypeRatio('beer', 50)], GradeRank(3,'>')))
-    people.append(Person('frank', [TypeRatio('cars'), TypeRatio('bikes')], GradeRank(2,'>')))
-    people.append(Person('bob', [TypeRatio('bikes')], GradeRank(2,'>')))
+    people.append(Person('frank', [TypeRatio('cars'), TypeRatio('bikes')], GradeRank(4,'>=')))
+    people.append(Person('bob', [TypeRatio('bikes')], GradeRank()))
+    people.append(Person('boby', [TypeRatio('cars')], GradeRank()))
 
     for person in people:
-        if payin.type in person.my_types():
-            if grader[person.grade_rank.oper](payin.grade, person.grade_rank.grade):
+        if payin.type not in person.my_types():
+            continue
+        else:
+            if grader(payin.grade, person.grade_rank):
                 eligble_people.append(person)
 
-    print(eligble_people)
-
+    print("{} is going to buy some {}".format(choice(eligble_people).name, payin.type))
 if __name__ == '__main__':
     main()
