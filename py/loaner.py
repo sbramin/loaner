@@ -63,8 +63,8 @@ class Loan(object):
 
 def grader(payment_grade, person_grade_rank):
     operators = {
-        '>': lambda x, y: True if x > y else False,
-        '>=': lambda x, y: True if x >= y else False
+        '>': lambda x, y: x > y,
+        '>=': lambda x, y: x >= y
     }
     return operators[person_grade_rank.oper](payment_grade,
                                              person_grade_rank.grade)
