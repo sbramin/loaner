@@ -40,8 +40,16 @@ func grader(l loan, g grade) bool {
 	return false
 }
 
-func pickLender(lo loan, les []lender) {
-	//el := make([]lender, 0)
+func pickLender(lo loan, les map[string]lender) {
+	el := make([]lender, len(les))
+	for _, l := range les {
+		if _, ok := l.Investments[lo.Category]; !ok {
+			continue
+		} else {
+			el = append(el, l)
+		}
+	}
+	fmt.Println(el)
 }
 
 func main() {
@@ -51,11 +59,15 @@ func main() {
 	lenders["Joe"] = lender{Name: "Joe", Budget: 10000, Grade: grade{Rating: 4, Operator: ">"}, Investments: map[string]investment{"cars": investment{}, "beer": investment{MaxPercent: 0.5}}}
 	lenders["Frank"] = lender{Name: "Frank", Budget: 20000, Grade: grade{Rating: 2, Operator: ">="}, Investments: map[string]investment{"cars": investment{}, "beer": investment{MaxPercent: 0.5}}}
 	lenders["Jane"] = lender{Name: "Jane", Budget: 10000, Grade: grade{Rating: 4, Operator: ">"}, Investments: map[string]investment{"cars": investment{}, "goats": investment{}}}
+	lenders["Mary"] = lender{Name: "Mary", Budget: 10000, Grade: grade{Rating: 4, Operator: ">"}, Investments: map[string]investment{"homes": investment{}, "goats": investment{}}}
 
 	loans = append(loans, loan{Amount: 100000, Category: "beer", Rating: 4})
 	loans = append(loans, loan{Amount: 100000, Category: "burgers", Rating: 4})
 	loans = append(loans, loan{Amount: 100000, Category: "cars", Rating: 2})
 
-	fmt.Println(lenders)
+	for _, l := range loans {
+		pickLender(l, lenders)
+	}
+
 	//fmt.Println(loans)
 }
