@@ -46,9 +46,15 @@ func grader(l loan, g grade) bool {
 func pickLender(lo loan, les map[string]lender) (lender, error) {
 	el := make([]lender, 0)
 	for _, l := range les {
-		if _, ok := l.Investments[lo.Category]; !ok {
+		if l.Budget == 0 {
+			continue
+		}
+		if lenderCat, ok := l.Investments[lo.Category]; !ok {
 			continue
 		} else {
+			if lenderCat.Invested >= int64(lenderCat.MaxPercent*float64(l.Budget)) {
+				continue
+			}
 			if grader(lo, l.Grade) {
 				el = append(el, l)
 			}
@@ -90,24 +96,25 @@ func main() {
 	lenders["Joe"] = lender{Name: "Joe", Budget: 10000, Grade: grade{Rating: 3, Operator: ">"}, Investments: map[string]investment{"cars": investment{}, "beer": investment{MaxPercent: 0.5}}}
 	lenders["Frank"] = lender{Name: "Frank", Budget: 20000, Grade: grade{Rating: 2, Operator: ">="}, Investments: map[string]investment{"cars": investment{}, "beer": investment{MaxPercent: 0.5}}}
 	lenders["Jane"] = lender{Name: "Jane", Budget: 10000, Grade: grade{Rating: 4, Operator: ">"}, Investments: map[string]investment{"cars": investment{}, "goats": investment{}}}
-	lenders["Mary"] = lender{Name: "Mary", Budget: 10000, Grade: grade{Rating: 3, Operator: ">"}, Investments: map[string]investment{"homes": investment{}, "goats": investment{}}}
+	lenders["Mary"] = lender{Name: "Mary", Budget: 10000, Grade: grade{Rating: 3, Operator: ">"}, Investments: map[string]investment{"homes": investment{}, "beer": investment{}}}
 
-	loans = append(loans, loan{Amount: 100000, Category: "beer", Rating: 4})
-	loans = append(loans, loan{Amount: 100000, Category: "burgers", Rating: 3})
-	loans = append(loans, loan{Amount: 100000, Category: "cars", Rating: 2})
+	loans = append(loans, loan{Amount: 10000, Category: "beer", Rating: 4})
+	//loans = append(loans, loan{Amount: 100000, Category: "burgers", Rating: 3})
+	//loans = append(loans, loan{Amount: 100000, Category: "cars", Rating: 2})
 
 	for _, l := range loans {
 		for l.Amount > l.AmountInvested {
 			lender, err := pickLender(l, lenders)
 			if err != nil {
-				fmt.Println(err)
-				//break
+				break
 			} else {
 				lender.Invest(l)
 				l.Buy()
 			}
 		}
 
-		fmt.Println(l.AmountInvested)
+		fmt.Println()
+
 	}
+
 }
