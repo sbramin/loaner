@@ -6,9 +6,9 @@ from random import choice
 class Investment(object):
     def __init__(self, type, max_percent=1, budget=0, invested=0,):
         self.type = type
-        self.budget = budget
-        self.invested = invested
-        self.max_percent = max_percent
+        self.budget= budget
+        self.invested= invested
+        self.max_percent= max_percent
 
     def info(self):
         print(self.type, self.max_percent, self.invested)
@@ -70,12 +70,28 @@ def grader(payment_grade, person_grade_rank):
                                              person_grade_rank.grade)
 
 
+def pick_lender(loan, people):
+    eligble_people = []
+    for person in people:
+        if loan.type not in person.investment_types():
+            continue
+        else:
+            if grader(loan.grade, person.grade_rank):
+                eligble_people.append(person)
+
+    if eligble_people == []:
+        return False
+    else:
+        return choice(eligble_people)
+
+
 def main():
     people = []
     eligble_people = []
     loans = []
 
     loans.append(Loan(100000, 'cars', 4))
+    loans.append(Loan(100000, 'boats', 4))
     loans.append(Loan(100000, 'bikes', 1))
     loans.append(Loan(100000, 'beer', 5))
 
@@ -86,25 +102,14 @@ def main():
 
 
     for loan in loans:
-        loan_result = 'paid out'
+        lender = pick_lender(loan, people)
+        if lender:
+            print("{} is going to invest in {}".format(lender.name, loan.type))
+    """
         while loan.fufilled() is False:
-            for person in people:
-                if loan.type not in person.investment_types():
-                    continue
-                else:
-                    if grader(loan.grade, person.grade_rank):
-                        eligble_people.append(person)
-            if eligble_people == []:
-                loan_result = 'unfilled'
-                break
-            loan.lend_in()
+                        loan.lend_in()
         print("loan for {} was {}".format(loan.type, loan_result))
-
-
-    if eligble_people:
-        print("{} is going to buy some {}".format(choice(eligble_people).name, loan.type))
-    else:
-        print("no one fits the bill")
+    """
 
 
 if __name__ == '__main__':
