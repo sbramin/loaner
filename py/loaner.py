@@ -4,11 +4,16 @@ from random import choice
 
 
 class Investment(object):
-    def __init__(self, type, max_percent=1, budget=0, invested=0,):
+    def __init__(
+            self,
+            type,
+            max_percent=1,
+            budget=0,
+            invested=0, ):
         self.type = type
-        self.budget= budget
-        self.invested= invested
-        self.max_percent= max_percent
+        self.budget = budget
+        self.invested = invested
+        self.max_percent = max_percent
 
     def info(self):
         print(self.type, self.max_percent, self.invested)
@@ -21,7 +26,11 @@ class GradeRank(object):
 
 
 class Person(object):
-    def __init__(self, name, investments, total_budget=0, grade_rank=GradeRank()):
+    def __init__(self,
+                 name,
+                 investments,
+                 total_budget=0,
+                 grade_rank=GradeRank()):
         self.name = name.title()
         self.investments = investments
         self.total_budget = total_budget
@@ -62,10 +71,7 @@ class Loan(object):
 
 
 def grader(payment_grade, person_grade_rank):
-    operators = {
-        '>': lambda x, y: x > y,
-        '>=': lambda x, y: x >= y
-    }
+    operators = {'>': lambda x, y: x > y, '>=': lambda x, y: x >= y}
     return operators[person_grade_rank.oper](payment_grade,
                                              person_grade_rank.grade)
 
@@ -95,16 +101,21 @@ def main():
     loans.append(Loan(100000, 'bikes', 1))
     loans.append(Loan(100000, 'beer', 5))
 
-    people.append(Person('John', [Investment('cars', .5), Investment('beer')], 500000, GradeRank(3,'>')))
-    people.append(Person('frank', [Investment('cars'), Investment('bikes')], 10000, GradeRank(4,'>=')))
+    people.append(
+        Person('John', [Investment('cars', .5), Investment('beer')], 500000,
+               GradeRank(3, '>')))
+    people.append(
+        Person('frank', [Investment('cars'), Investment('bikes')], 10000,
+               GradeRank(4, '>=')))
     people.append(Person('bob', [Investment('bikes')], 10000, GradeRank()))
     people.append(Person('Boby', [Investment('cars')], 20000, GradeRank()))
-
 
     for loan in loans:
         lender = pick_lender(loan, people)
         if lender:
             print("{} is going to invest in {}".format(lender.name, loan.type))
+        else:
+            print("No one wants to invest in {}".format(loan.type))
     """
         while loan.fufilled() is False:
                         loan.lend_in()
